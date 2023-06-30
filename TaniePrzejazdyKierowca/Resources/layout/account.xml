@@ -10,6 +10,6 @@
         android:textSize="18sp"
         android:text="Account fragment"
         android:textColor="#000"
-        android:layout_centerInParent=""
+        android:layout_centerInParent="true"
         />
 </RelativeLayout>
