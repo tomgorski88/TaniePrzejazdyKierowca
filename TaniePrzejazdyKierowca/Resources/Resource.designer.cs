@@ -3615,13 +3615,16 @@ namespace TaniePrzejazdyKierowca
 			public const int tpDarkAsh = 2131034629;
 			
 			// aapt resource value: 0x7F050206
-			public const int tpPrimary = 2131034630;
+			public const int tpGreen = 2131034630;
 			
 			// aapt resource value: 0x7F050207
-			public const int tpPrimaryDark = 2131034631;
+			public const int tpPrimary = 2131034631;
 			
 			// aapt resource value: 0x7F050208
-			public const int tpWhite = 2131034632;
+			public const int tpPrimaryDark = 2131034632;
+			
+			// aapt resource value: 0x7F050209
+			public const int tpWhite = 2131034633;
 			
 			static Color()
 			{
@@ -4871,7 +4874,10 @@ namespace TaniePrzejazdyKierowca
 			public const int tproundbutton = 2131165361;
 			
 			// aapt resource value: 0x7F0700B2
-			public const int tproundbutton_online = 2131165362;
+			public const int tproundbutton_offline = 2131165362;
+			
+			// aapt resource value: 0x7F0700B3
+			public const int tproundbutton_online = 2131165363;
 			
 			static Drawable()
 			{

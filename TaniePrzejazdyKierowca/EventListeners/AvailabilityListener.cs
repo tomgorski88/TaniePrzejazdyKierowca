@@ -10,12 +10,12 @@ namespace TaniePrzejazdyKierowca.EventListeners
         DatabaseReference availabilityRef;
         public void OnCancelled(DatabaseError error)
         {
-            
+
         }
 
         public void OnDataChange(DataSnapshot snapshot)
         {
-            
+
         }
 
         public void Create(Android.Locations.Location myLocation)
@@ -43,6 +43,21 @@ namespace TaniePrzejazdyKierowca.EventListeners
             availabilityRef.RemoveValue();
             availabilityRef.RemoveEventListener(this);
             availabilityRef = null;
+        }
+
+
+        public void UpdateLocation(Android.Locations.Location myLocation)
+        {
+            var driverId = AppDataHelper.GetCurrentUser().Uid;
+            if (availabilityRef != null)
+            {
+                var locationRef = database.GetReference("driversAvailable/" + driverId + "/location");
+
+                var locationMap = new HashMap();
+                locationMap.Put("latitude", myLocation.Latitude);
+                locationMap.Put("longitude", myLocation.Longitude);
+                locationRef.SetValue(locationMap);
+            }
         }
     }
 }

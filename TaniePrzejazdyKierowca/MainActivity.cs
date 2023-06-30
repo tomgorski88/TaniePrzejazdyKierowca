@@ -7,6 +7,7 @@ using Android.Runtime;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
+using AndroidX.Core.Content;
 using AndroidX.ViewPager.Widget;
 using Com.Ittianyu.Bottomnavigationviewex;
 using System;
@@ -87,6 +88,11 @@ namespace TaniePrzejazdyKierowca
             mLastLocation = e.Location;
             mLastLatLng = new LatLng(mLastLocation.Latitude, mLastLocation.Longitude);
 
+            if(availabilityListener != null)
+            {
+                availabilityListener.UpdateLocation(mLastLocation);
+            }
+
             if (availabilityStatus && availabilityListener == null)
             {
                 TakeDriverOnline();
@@ -120,6 +126,8 @@ namespace TaniePrzejazdyKierowca
                     homeFragment.GoOffline();
                     goOnlineButton.Text = "Go online";
                     availabilityStatus = false;
+                    goOnlineButton.Background = ContextCompat.GetDrawable(this, Resource.Drawable.tproundbutton_offline);
+
                     TakeDriverOffline();
                 });
 
@@ -135,6 +143,7 @@ namespace TaniePrzejazdyKierowca
                 availabilityStatus = true;
                 homeFragment.GoOnline();
                 goOnlineButton.Text = "Go offline";
+                goOnlineButton.Background = ContextCompat.GetDrawable(this, Resource.Drawable.tproundbutton_offline);
             }
         }
 
