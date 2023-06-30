@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">TaniePrzejazdyKierowca</string>
-    <string name="action_settings">Settings</string>
+	<string name="app_name">Tanie Przejazdy Kierowca</string>
+	<string name="action_settings">Settings</string>
+	<string name="click_here">Not registered? Click to Register</string>
+	<string name="click_login">Already registered? Click to Login</string>
+	<string name="mapkey">AIzaSyBjtBp0qcYVaUtCmAluek738nzWzjkSojs</string>
 </resources>

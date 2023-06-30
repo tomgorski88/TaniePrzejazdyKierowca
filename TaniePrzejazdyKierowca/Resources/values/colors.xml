@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2c3e50</color>
-    <color name="colorPrimaryDark">#1B3147</color>
-    <color name="colorAccent">#3498db</color>
+	<color name="colorPrimary">#2c3e50</color>
+	<color name="colorPrimaryDark">#1B3147</color>
+	<color name="colorAccent">#3498db</color>
+	<color name="splashBackground">#fff</color>
+
+	<color name="tpBlack">#000</color>
+	<color name="tpPrimary">#1C4258</color>
+	<color name="tpPrimaryDark">#102A38</color>
+	<color name="tpAccentColor">#18BFF2</color>
+	<color name="tpWhite">#fff</color>
+	<color name="tpAccentClick">#A25508</color>
+	<color name="tpAsh">#e2e2e2</color>
 </resources>
