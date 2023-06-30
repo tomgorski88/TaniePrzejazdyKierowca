@@ -70,6 +70,7 @@
     <Compile Include="Fragments\EarningsFragment.cs" />
     <Compile Include="Fragments\RatingsFragment.cs" />
     <Compile Include="Helpers\AppDataHelper.cs" />
+    <Compile Include="Helpers\LocationCallbackHelper.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
