@@ -12,4 +12,5 @@
 	<color name="tpWhite">#fff</color>
 	<color name="tpAccentClick">#A25508</color>
 	<color name="tpAsh">#e2e2e2</color>
+	<color name="tpDarkAsh">#999797</color>
 </resources>
