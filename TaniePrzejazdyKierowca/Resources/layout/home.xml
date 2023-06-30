@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="18sp"
-        android:text="Home fragment"
-        android:textColor="#000"
-        android:layout_centerInParent="true"
+    android:layout_width="fill_parent"
+    android:background="@color/tpWhite"
+    android:layout_height="fill_parent">
+   <fragment
+        android:id="@+id/map"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:name="com.google.android.gms.maps.SupportMapFragment" />
         />
-</RelativeLayout>
+
+    <ImageView
+        android:id="@+id/centerMarker"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:src="@drawable/greenmarker"
+        android:tint="@color/tpPrimary"
+        />
+</FrameLayout>

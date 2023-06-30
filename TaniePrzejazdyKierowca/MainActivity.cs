@@ -1,8 +1,10 @@
-﻿using Android.App;
+﻿using Android;
+using Android.App;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using AndroidX.AppCompat.App;
+using AndroidX.Core.App;
 using AndroidX.ViewPager.Widget;
 using Com.Ittianyu.Bottomnavigationviewex;
 using System;
@@ -23,6 +25,9 @@ namespace TaniePrzejazdyKierowca
         EarningsFragment earningsFragment = new EarningsFragment();
         RatingsFragment ratingsFragment = new RatingsFragment();
 
+        private readonly string[] permissionGroupLocation = { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.AccessFineLocation };
+        private const int requestId = 0;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -31,6 +36,7 @@ namespace TaniePrzejazdyKierowca
             SetContentView(Resource.Layout.activity_main);
 
             ConnectViews();
+            CheckSpecialPermission();
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
@@ -118,6 +124,22 @@ namespace TaniePrzejazdyKierowca
             adapter.AddFragment(accountFragment, "Account");
 
             viewPager.Adapter = adapter; 
+        }
+
+        bool CheckSpecialPermission()
+        {
+            bool permissionGranted;
+            if (ActivityCompat.CheckSelfPermission(this, Manifest.Permission.AccessFineLocation) != Android.Content.PM.Permission.Granted &&
+                ActivityCompat.CheckSelfPermission(this, Manifest.Permission.AccessCoarseLocation) != Android.Content.PM.Permission.Granted)
+            {
+                permissionGranted = false;
+                RequestPermissions(permissionGroupLocation, requestId);
+            }
+            else
+            {
+                permissionGranted = true;
+            }
+            return permissionGranted;
         }
     }
 }
