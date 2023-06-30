@@ -112,8 +112,25 @@ namespace TaniePrzejazdyKierowca
             }
             if (availabilityStatus)
             {
-                
-            } else
+                var alert = new Android.App.AlertDialog.Builder(this);
+                alert.SetTitle("Go offline");
+                alert.SetMessage("You will not be able to receive Ride requests");
+                alert.SetPositiveButton("Continue", (senderAlert, args) =>
+                {
+                    homeFragment.GoOffline();
+                    goOnlineButton.Text = "Go online";
+                    availabilityStatus = false;
+                    TakeDriverOffline();
+                });
+
+                alert.SetNegativeButton("Cancel", (senderAlert, args) =>
+                {
+                    alert.Dispose();
+                });
+
+                alert.Show();
+            }
+            else
             {
                 availabilityStatus = true;
                 homeFragment.GoOnline();
