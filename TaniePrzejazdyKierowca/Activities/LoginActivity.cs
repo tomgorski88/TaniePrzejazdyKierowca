@@ -30,6 +30,12 @@ namespace TaniePrzejazdyKierowca.Activities
         private FirebaseAuth mAuth;
         private FirebaseDatabase database;
         private FirebaseUser currentUser;
+
+        private Android.App.AlertDialog.Builder alert;
+        private Android.App.AlertDialog alertDialog;
+
+
+
         private string fullname, phone, email, password;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -64,6 +70,8 @@ namespace TaniePrzejazdyKierowca.Activities
             password = passwordText.EditText.Text;
             email = emailText.EditText.Text;
 
+            ShowProgressDialogue();
+
             var taskCompletionListener = new TaskCompletionListener();
             taskCompletionListener.Success += TaskCompletionListener_Success;
             taskCompletionListener.Failure += TaskCompletionListener_Failure;
@@ -75,17 +83,37 @@ namespace TaniePrzejazdyKierowca.Activities
 
         private void TaskCompletionListener_Failure(object sender, EventArgs e)
         {
+            CloseProgressDialogue();
             Snackbar.Make(rootView, "Login failed", Snackbar.LengthShort).Show();
         }
 
         private void TaskCompletionListener_Success(object sender, EventArgs e)
         {
+            CloseProgressDialogue();
             StartActivity(typeof(MainActivity));
         }
 
         private void ClickToRegisterText_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            StartActivity(typeof(RegistrationActivity));
+            Finish();
+        }
+        private void ShowProgressDialogue()
+        {
+            alert = new AlertDialog.Builder(this);
+            alert.SetView(Resource.Layout.progress);
+            alert.SetCancelable(false);
+
+            alertDialog = alert.Show();
+        }
+        private void CloseProgressDialogue()
+        {
+            if(alertDialog != null)
+            {
+                alertDialog.Dismiss();
+                alertDialog = null;
+                alert = null;
+            }
         }
     }
 }
