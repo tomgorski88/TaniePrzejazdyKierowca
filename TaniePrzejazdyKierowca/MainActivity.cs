@@ -1,14 +1,18 @@
 ﻿using Android;
 using Android.App;
+using Android.Gms.Maps.Model;
 using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
+using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.App;
 using AndroidX.ViewPager.Widget;
 using Com.Ittianyu.Bottomnavigationviewex;
 using System;
+using TaniePrzejazdy.Helpers;
 using TaniePrzejazdyKierowca.Adapters;
+using TaniePrzejazdyKierowca.EventListeners;
 using TaniePrzejazdyKierowca.Fragments;
 
 namespace TaniePrzejazdyKierowca
@@ -19,6 +23,8 @@ namespace TaniePrzejazdyKierowca
         ViewPager viewPager;
         BottomNavigationViewEx bnve;
 
+        Button goOnlineButton;
+
         //Fragments
         HomeFragment homeFragment = new HomeFragment();
         AccountFragment accountFragment = new AccountFragment();
@@ -27,6 +33,14 @@ namespace TaniePrzejazdyKierowca
 
         private readonly string[] permissionGroupLocation = { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.AccessFineLocation };
         private const int requestId = 0;
+
+        ProfileEventListener profileEventListener = new ProfileEventListener();
+        AvailabilityListener availabilityListener;
+
+        Android.Locations.Location mLastLocation;
+        LatLng mLastLatLng;
+
+        bool availabilityStatus;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -37,6 +51,7 @@ namespace TaniePrzejazdyKierowca
 
             ConnectViews();
             CheckSpecialPermission();
+            profileEventListener.Create();
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
@@ -47,6 +62,9 @@ namespace TaniePrzejazdyKierowca
 
         void ConnectViews()
         {
+            goOnlineButton = (Button)FindViewById(Resource.Id.goOnlineButton);
+            goOnlineButton.Click += GoOnlineButton_Click;
+
             bnve = (BottomNavigationViewEx)FindViewById(Resource.Id.bnve);
             bnve.EnableItemShiftingMode(false);
             bnve.EnableShiftingMode(false);
@@ -60,11 +78,52 @@ namespace TaniePrzejazdyKierowca
             viewPager.BeginFakeDrag();
 
             SetupViewPager();
+
+            homeFragment.CurrentLocation += HomeFragment_CurrentLocation;
+        }
+
+        private void HomeFragment_CurrentLocation(object sender, LocationCallbackHelper.OnLocationCapturedEventArgs e)
+        {
+            mLastLocation = e.Location;
+            mLastLatLng = new LatLng(mLastLocation.Latitude, mLastLocation.Longitude);
+
+            if (availabilityStatus && availabilityListener == null)
+            {
+                TakeDriverOnline();
+            }
+        }
+
+        private void TakeDriverOnline()
+        {
+            availabilityListener = new AvailabilityListener();
+            availabilityListener.Create(mLastLocation);
+        }
+        private void TakeDriverOffline()
+        {
+            availabilityListener.RemoveListener();
+            availabilityListener = null;
+        }
+
+        private void GoOnlineButton_Click(object sender, EventArgs e)
+        {
+            if (!CheckSpecialPermission())
+            {
+                return;
+            }
+            if (availabilityStatus)
+            {
+                
+            } else
+            {
+                availabilityStatus = true;
+                homeFragment.GoOnline();
+                goOnlineButton.Text = "Go offline";
+            }
         }
 
         private void Bnve_NavigationItemSelected(object sender, Android.Support.Design.Widget.BottomNavigationView.NavigationItemSelectedEventArgs e)
         {
-            if(e.Item.ItemId == Resource.Id.action_earning)
+            if (e.Item.ItemId == Resource.Id.action_earning)
             {
                 viewPager.SetCurrentItem(1, true);
                 BnveToActionColor(1);
@@ -123,7 +182,7 @@ namespace TaniePrzejazdyKierowca
             adapter.AddFragment(ratingsFragment, "Rating");
             adapter.AddFragment(accountFragment, "Account");
 
-            viewPager.Adapter = adapter; 
+            viewPager.Adapter = adapter;
         }
 
         bool CheckSpecialPermission()

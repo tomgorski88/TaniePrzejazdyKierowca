@@ -4,6 +4,7 @@ using Android.Gms.Maps.Model;
 using Android.Locations;
 using Android.OS;
 using Android.Views;
+using Android.Widget;
 using System;
 using TaniePrzejazdy.Helpers;
 using static TaniePrzejazdy.Helpers.LocationCallbackHelper;
@@ -12,6 +13,8 @@ namespace TaniePrzejazdyKierowca.Fragments
 {
     public class HomeFragment : AndroidX.Fragment.App.Fragment, IOnMapReadyCallback
     {
+        private ImageView centerMarker;
+
         public GoogleMap mainMap;
         public EventHandler<OnLocationCapturedEventArgs> CurrentLocation;
         
@@ -36,6 +39,7 @@ namespace TaniePrzejazdyKierowca.Fragments
             // Use this to return your custom view for this Fragment
             var view = inflater.Inflate(Resource.Layout.home, container, false);
             var mapFragment = (SupportMapFragment)ChildFragmentManager.FindFragmentById(Resource.Id.map);
+            centerMarker = (ImageView)view.FindViewById(Resource.Id.centerMarker);
             mapFragment.GetMapAsync(this);
             return view;
         }
@@ -60,7 +64,7 @@ namespace TaniePrzejazdyKierowca.Fragments
             mLocationCallback = new LocationCallbackHelper();
             mLocationCallback.MyLocation += MLocationCallback_MyLocation;
 
-            StartLocationUpdates();
+           // StartLocationUpdates();
         }
 
         private void MLocationCallback_MyLocation(object sender, LocationCallbackHelper.OnLocationCapturedEventArgs e)
@@ -76,5 +80,23 @@ namespace TaniePrzejazdyKierowca.Fragments
         {
             locationProviderClient.RequestLocationUpdates(mLocationRequest, mLocationCallback, null);
         }
+        private void StopLocationUpdates()
+        {
+            locationProviderClient.RemoveLocationUpdates(mLocationCallback);
+        }
+
+        public void GoOnline()
+        {
+            centerMarker.Visibility = ViewStates.Visible;
+            StartLocationUpdates();
+        }
+
+        public void GoOffline()
+        {
+            centerMarker.Visibility = ViewStates.Invisible;
+            StopLocationUpdates();
+        }
+
+       
     }
 }

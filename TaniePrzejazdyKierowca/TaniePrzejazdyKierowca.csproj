@@ -64,6 +64,8 @@
     <Compile Include="Activities\RegistrationActivity.cs" />
     <Compile Include="Activities\SplashActivity.cs" />
     <Compile Include="Adapters\ViewPagerAdapter.cs" />
+    <Compile Include="EventListeners\AvailabilityListener.cs" />
+    <Compile Include="EventListeners\ProfileEventListener.cs" />
     <Compile Include="EventListeners\TaskCompletionListener.cs" />
     <Compile Include="Fragments\AccountFragment.cs" />
     <Compile Include="Fragments\HomeFragment.cs" />
