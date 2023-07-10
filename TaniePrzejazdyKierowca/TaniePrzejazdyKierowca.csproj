@@ -64,6 +64,7 @@
     <Compile Include="Activities\RegistrationActivity.cs" />
     <Compile Include="Activities\SplashActivity.cs" />
     <Compile Include="Adapters\ViewPagerAdapter.cs" />
+    <Compile Include="DataModels\RideDetails.cs" />
     <Compile Include="EventListeners\AvailabilityListener.cs" />
     <Compile Include="EventListeners\ProfileEventListener.cs" />
     <Compile Include="EventListeners\RideDetailsListener.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Fragments\AccountFragment.cs" />
     <Compile Include="Fragments\HomeFragment.cs" />
     <Compile Include="Fragments\EarningsFragment.cs" />
+    <Compile Include="Fragments\NewRequestFragment.cs" />
     <Compile Include="Fragments\RatingsFragment.cs" />
     <Compile Include="Helpers\AppDataHelper.cs" />
     <Compile Include="Helpers\LocationCallbackHelper.cs" />
@@ -228,6 +230,11 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\tproundbutton_offline.xml">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\newrequest_dialogue.xml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

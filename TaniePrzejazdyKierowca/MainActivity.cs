@@ -13,6 +13,7 @@ using Com.Ittianyu.Bottomnavigationviewex;
 using System;
 using TaniePrzejazdy.Helpers;
 using TaniePrzejazdyKierowca.Adapters;
+using TaniePrzejazdyKierowca.DataModels;
 using TaniePrzejazdyKierowca.EventListeners;
 using TaniePrzejazdyKierowca.Fragments;
 
@@ -32,16 +33,21 @@ namespace TaniePrzejazdyKierowca
         EarningsFragment earningsFragment = new EarningsFragment();
         RatingsFragment ratingsFragment = new RatingsFragment();
 
+        NewRequestFragment requestFoundDialogue;
+
         private readonly string[] permissionGroupLocation = { Manifest.Permission.AccessCoarseLocation, Manifest.Permission.AccessFineLocation };
         private const int requestId = 0;
 
         ProfileEventListener profileEventListener = new ProfileEventListener();
         AvailabilityListener availabilityListener;
+        RideDetailsListener rideDetailsListener;
 
         Android.Locations.Location mLastLocation;
         LatLng mLastLatLng;
 
         bool availabilityStatus;
+
+        private RideDetails newRideDetails;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -110,19 +116,38 @@ namespace TaniePrzejazdyKierowca
 
         private void AvailabilityListener_RideCancelled(object sender, EventArgs e)
         {
-            Toast.MakeText(this, "New trip cancelled = ", ToastLength.Long).Show();
+            Toast.MakeText(this, "New trip cancelled", ToastLength.Long).Show();
             availabilityListener.Reactivate();
         }
 
         private void AvailabilityListener_RideTimeout(object sender, EventArgs e)
         {
-            Toast.MakeText(this, "New trip timed out ", ToastLength.Long).Show();
+            Toast.MakeText(this, "New trip timed out", ToastLength.Long).Show();
             availabilityListener.Reactivate();
         }
 
         private void AvailabilityListener_RideAssigned(object sender, AvailabilityListener.RideAssignedIDEventArgs e)
         {
             Toast.MakeText(this, "New trip assigned = " + e.RideId, ToastLength.Long).Show();
+
+            rideDetailsListener = new RideDetailsListener();
+            rideDetailsListener.Create(e.RideId);
+            rideDetailsListener.RideDetailsFound += RideDetailsListener_RideDetailsFound;
+            rideDetailsListener.RideDetailsNotFound += RideDetailsListener_RideDetailsNotFound;
+        }
+
+        private void RideDetailsListener_RideDetailsNotFound(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RideDetailsListener_RideDetailsFound(object sender, RideDetailsListener.RideDetailsEventArgs e)
+        {
+            newRideDetails = e.RideDetails;
+            requestFoundDialogue = new NewRequestFragment(newRideDetails.PickupAddress, newRideDetails.DestinationAddress);
+            requestFoundDialogue.Cancelable = false;
+            var trans = SupportFragmentManager.BeginTransaction();
+            requestFoundDialogue.Show(trans, "Request");
         }
 
         private void TakeDriverOffline()
