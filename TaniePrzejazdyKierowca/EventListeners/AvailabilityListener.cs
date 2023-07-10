@@ -31,7 +31,7 @@ namespace TaniePrzejazdyKierowca.EventListeners
 
             var driverInfo = new HashMap();
             driverInfo.Put("location", location);
-            driverInfo.Put("ride_id", "wating");
+            driverInfo.Put("ride_id", "waiting");
 
             availabilityRef.AddValueEventListener(this);
             availabilityRef.SetValue(driverInfo);
