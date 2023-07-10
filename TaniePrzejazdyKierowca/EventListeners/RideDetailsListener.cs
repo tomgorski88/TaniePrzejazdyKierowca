@@ -22,6 +22,7 @@ namespace TaniePrzejazdyKierowca.EventListeners
 
         public void OnDataChange(DataSnapshot snapshot)
         {
+            if (snapshot.Value != null)
             {
 
                 var rideDetails = new RideDetails
