@@ -103,7 +103,28 @@ namespace TaniePrzejazdyKierowca
         {
             availabilityListener = new AvailabilityListener();
             availabilityListener.Create(mLastLocation);
+            availabilityListener.RideAssigned += AvailabilityListener_RideAssigned;
+            availabilityListener.RideTimeout += AvailabilityListener_RideTimeout;
+            availabilityListener.RideCancelled += AvailabilityListener_RideCancelled;
         }
+
+        private void AvailabilityListener_RideCancelled(object sender, EventArgs e)
+        {
+            Toast.MakeText(this, "New trip cancelled = ", ToastLength.Long).Show();
+            availabilityListener.Reactivate();
+        }
+
+        private void AvailabilityListener_RideTimeout(object sender, EventArgs e)
+        {
+            Toast.MakeText(this, "New trip timed out ", ToastLength.Long).Show();
+            availabilityListener.Reactivate();
+        }
+
+        private void AvailabilityListener_RideAssigned(object sender, AvailabilityListener.RideAssignedIDEventArgs e)
+        {
+            Toast.MakeText(this, "New trip assigned = " + e.RideId, ToastLength.Long).Show();
+        }
+
         private void TakeDriverOffline()
         {
             availabilityListener.RemoveListener();

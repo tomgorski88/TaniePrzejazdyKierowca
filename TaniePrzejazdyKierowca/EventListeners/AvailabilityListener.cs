@@ -1,5 +1,6 @@
 ﻿using Firebase.Database;
 using Java.Util;
+using System;
 using TaniePrzejazdyKierowca.Helpers;
 
 namespace TaniePrzejazdyKierowca.EventListeners
@@ -8,6 +9,16 @@ namespace TaniePrzejazdyKierowca.EventListeners
     {
         FirebaseDatabase database;
         DatabaseReference availabilityRef;
+
+        public class RideAssignedIDEventArgs : EventArgs
+        {
+            public string RideId { get; set; }
+        }
+
+        public event EventHandler<RideAssignedIDEventArgs> RideAssigned;
+        public event EventHandler RideCancelled;
+        public event EventHandler RideTimeout;
+
         public void OnCancelled(DatabaseError error)
         {
 
@@ -15,7 +26,22 @@ namespace TaniePrzejazdyKierowca.EventListeners
 
         public void OnDataChange(DataSnapshot snapshot)
         {
-
+            if (snapshot.Value != null)
+            {
+                var ride_id = snapshot.Child("ride_id").Value.ToString();
+                if (ride_id != "waiting" && ride_id != "timeout" && ride_id != "cancelled")
+                {
+                    RideAssigned?.Invoke(this, new RideAssignedIDEventArgs { RideId = ride_id });
+                }
+                else if (ride_id == "timeout")
+                {
+                    RideTimeout?.Invoke(this, new EventArgs());
+                }
+                else if (ride_id == "cancelled")
+                {
+                    RideCancelled?.Invoke(this, new EventArgs());
+                }
+            }
         }
 
         public void Create(Android.Locations.Location myLocation)
@@ -58,6 +84,11 @@ namespace TaniePrzejazdyKierowca.EventListeners
                 locationMap.Put("longitude", myLocation.Longitude);
                 locationRef.SetValue(locationMap);
             }
+        }
+
+        public void Reactivate()
+        {
+            availabilityRef.Child("ride_id").SetValue("waiting");
         }
     }
 }

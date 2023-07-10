@@ -66,6 +66,7 @@
     <Compile Include="Adapters\ViewPagerAdapter.cs" />
     <Compile Include="EventListeners\AvailabilityListener.cs" />
     <Compile Include="EventListeners\ProfileEventListener.cs" />
+    <Compile Include="EventListeners\RideDetailsListener.cs" />
     <Compile Include="EventListeners\TaskCompletionListener.cs" />
     <Compile Include="Fragments\AccountFragment.cs" />
     <Compile Include="Fragments\HomeFragment.cs" />
