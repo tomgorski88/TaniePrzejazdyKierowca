@@ -36,7 +36,7 @@ namespace TaniePrzejazdyKierowca.EventListeners
                     PickupLng = double.Parse(snapshot.Child("location").Child("longitude").Value.ToString(), CultureInfo.InvariantCulture),
 
                     RideId = snapshot.Key,
-                    RiderName = snapshot.Child("rider_name").Value.ToString() ?? "test123"
+                    RiderName = snapshot.Child("rider_name").Value.ToString(),
                     RiderPhone = snapshot.Child("rider_phone").Value.ToString()
                 };
 

@@ -2,6 +2,7 @@
 using Android.App;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
+using Android.Media;
 using Android.OS;
 using Android.Runtime;
 using Android.Widget;
@@ -41,6 +42,8 @@ namespace TaniePrzejazdyKierowca
         ProfileEventListener profileEventListener = new ProfileEventListener();
         AvailabilityListener availabilityListener;
         RideDetailsListener rideDetailsListener;
+
+        MediaPlayer player;
 
         Android.Locations.Location mLastLocation;
         LatLng mLastLatLng;
@@ -116,12 +119,27 @@ namespace TaniePrzejazdyKierowca
 
         private void AvailabilityListener_RideCancelled(object sender, EventArgs e)
         {
+            if (requestFoundDialogue != null)
+            {
+                requestFoundDialogue.Dismiss();
+                requestFoundDialogue = null;
+                player.Stop();
+                player = null;
+            }
             Toast.MakeText(this, "New trip cancelled", ToastLength.Long).Show();
             availabilityListener.Reactivate();
         }
 
         private void AvailabilityListener_RideTimeout(object sender, EventArgs e)
         {
+            if(requestFoundDialogue != null)
+            {
+                requestFoundDialogue.Dismiss();
+                requestFoundDialogue = null;
+                player.Stop();
+                player = null;
+            }
+
             Toast.MakeText(this, "New trip timed out", ToastLength.Long).Show();
             availabilityListener.Reactivate();
         }
@@ -134,6 +152,9 @@ namespace TaniePrzejazdyKierowca
             rideDetailsListener.Create(e.RideId);
             rideDetailsListener.RideDetailsFound += RideDetailsListener_RideDetailsFound;
             rideDetailsListener.RideDetailsNotFound += RideDetailsListener_RideDetailsNotFound;
+
+            player = MediaPlayer.Create(this, Resource.Raw.alert);
+            player.Start();
         }
 
         private void RideDetailsListener_RideDetailsNotFound(object sender, EventArgs e)
