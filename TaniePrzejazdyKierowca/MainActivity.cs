@@ -17,6 +17,7 @@ using TaniePrzejazdyKierowca.Adapters;
 using TaniePrzejazdyKierowca.DataModels;
 using TaniePrzejazdyKierowca.EventListeners;
 using TaniePrzejazdyKierowca.Fragments;
+using TaniePrzejazdyKierowca.Helpers;
 
 namespace TaniePrzejazdyKierowca
 {
@@ -49,6 +50,8 @@ namespace TaniePrzejazdyKierowca
         LatLng mLastLatLng;
 
         bool availabilityStatus;
+        bool isBackground;
+        bool newRideAssigned;
 
         private RideDetails newRideDetails;
 
@@ -97,7 +100,7 @@ namespace TaniePrzejazdyKierowca
             mLastLocation = e.Location;
             mLastLatLng = new LatLng(mLastLocation.Latitude, mLastLocation.Longitude);
 
-            if(availabilityListener != null)
+            if (availabilityListener != null)
             {
                 availabilityListener.UpdateLocation(mLastLocation);
             }
@@ -132,7 +135,7 @@ namespace TaniePrzejazdyKierowca
 
         private void AvailabilityListener_RideTimeout(object sender, EventArgs e)
         {
-            if(requestFoundDialogue != null)
+            if (requestFoundDialogue != null)
             {
                 requestFoundDialogue.Dismiss();
                 requestFoundDialogue = null;
@@ -152,9 +155,6 @@ namespace TaniePrzejazdyKierowca
             rideDetailsListener.Create(e.RideId);
             rideDetailsListener.RideDetailsFound += RideDetailsListener_RideDetailsFound;
             rideDetailsListener.RideDetailsNotFound += RideDetailsListener_RideDetailsNotFound;
-
-            player = MediaPlayer.Create(this, Resource.Raw.alert);
-            player.Start();
         }
 
         private void RideDetailsListener_RideDetailsNotFound(object sender, EventArgs e)
@@ -162,13 +162,33 @@ namespace TaniePrzejazdyKierowca
 
         }
 
-        private void RideDetailsListener_RideDetailsFound(object sender, RideDetailsListener.RideDetailsEventArgs e)
+        void CreateNewRequestDialogue()
         {
-            newRideDetails = e.RideDetails;
             requestFoundDialogue = new NewRequestFragment(newRideDetails.PickupAddress, newRideDetails.DestinationAddress);
             requestFoundDialogue.Cancelable = false;
             var trans = SupportFragmentManager.BeginTransaction();
             requestFoundDialogue.Show(trans, "Request");
+
+            player = MediaPlayer.Create(this, Resource.Raw.alert);
+            player.Start();
+        }
+
+        private void RideDetailsListener_RideDetailsFound(object sender, RideDetailsListener.RideDetailsEventArgs e)
+        {
+            newRideDetails = e.RideDetails;
+            if (!isBackground)
+            {
+                CreateNewRequestDialogue();
+            }
+            else
+            {
+                newRideAssigned = true;
+                NotificationHelper notificationHelper = new NotificationHelper();
+                if ((int)Build.VERSION.SdkInt >= 26)
+                {
+                   // notificationHelper.NotifyVersion26(this, Resources, (NotificationManager)GetSystemService(NotificationService));
+                }
+            }
         }
 
         private void TakeDriverOffline()
@@ -292,6 +312,21 @@ namespace TaniePrzejazdyKierowca
                 permissionGranted = true;
             }
             return permissionGranted;
+        }
+        protected override void OnPause()
+        {
+            isBackground = true;
+            base.OnPause();
+        }
+        protected override void OnResume()
+        {
+            isBackground = false;
+            if (newRideAssigned)
+            {
+                CreateNewRequestDialogue();
+                newRideAssigned = false;
+            }
+            base.OnResume();
         }
     }
 }
