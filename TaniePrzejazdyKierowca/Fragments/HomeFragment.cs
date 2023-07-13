@@ -27,6 +27,17 @@ namespace TaniePrzejazdyKierowca.Fragments
         static int FASTEST_INTERVAL = 5000;
         static int DISPLACEMENT = 3;
 
+        private LinearLayout rideInfoLayout;
+        private TextView riderNameText;
+
+        ImageButton cancelTripButton;
+        ImageButton callRiderButton;
+        ImageButton navigateButton;
+        Button tripButton;
+
+        bool tripCreated;
+       
+
         public override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -41,6 +52,15 @@ namespace TaniePrzejazdyKierowca.Fragments
             var mapFragment = (SupportMapFragment)ChildFragmentManager.FindFragmentById(Resource.Id.map);
             centerMarker = (ImageView)view.FindViewById(Resource.Id.centerMarker);
             mapFragment.GetMapAsync(this);
+
+            cancelTripButton = (ImageButton)view.FindViewById(Resource.Id.cancelTripButton);
+            callRiderButton  = (ImageButton) view.FindViewById(Resource.Id.callRiderButton);
+            navigateButton = (ImageButton)view.FindViewById(Resource.Id.navigateButton);
+            tripButton = (Button)view.FindViewById(Resource.Id.tripButton);
+
+            riderNameText = (TextView)view.FindViewById(Resource.Id.riderNameText);
+            rideInfoLayout = (LinearLayout)view.FindViewById(Resource.Id.rideInfoLayout);
+
             return view;
         }
 
